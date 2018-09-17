@@ -2,6 +2,7 @@ package com.louisleung.springboot.schedulermicroservice.controllers;
 
 
 import com.louisleung.springboot.schedulermicroservice.models.Task;
+import com.louisleung.springboot.schedulermicroservice.models.SubmittedTask;
 import com.louisleung.springboot.schedulermicroservice.repositories.TaskRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public void addTask(@RequestBody Task task) {
-        taskRepository.save(task);
+    public void addTask(@RequestBody SubmittedTask submittedTask) {
+        taskRepository.save(new Task(submittedTask));
     }
 }

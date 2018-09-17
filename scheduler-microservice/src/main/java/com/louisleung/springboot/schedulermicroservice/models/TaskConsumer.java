@@ -11,7 +11,7 @@ public class TaskConsumer {
     @Id
     private String id;
     private Integer readableId;
-    private List<String> assignedTasks;
+    private List<Integer> assignedTasks;
 
     public Integer getReadableId() {
         return readableId;
@@ -21,11 +21,11 @@ public class TaskConsumer {
         this.readableId = readableId;
     }
 
-    public List<String> getAssignedTasks() {
+    public List<Integer> getAssignedTasks() {
         return assignedTasks;
     }
 
-    public void setAssignedTasks(List<String> assignedTasks) {
+    public void setAssignedTasks(List<Integer> assignedTasks) {
         this.assignedTasks = assignedTasks;
     }
 

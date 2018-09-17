@@ -24,8 +24,12 @@ public class TaskConsumerController {
         taskConsumerRepository.save(new TaskConsumer(consumerId));
     }
 
+
     @PostMapping(path="/{taskConsumerId}")
-    public List<Task> queryForTask(@PathVariable Integer taskConsumerId) {
-       return Scheduler.readFromTaskRepo();
+    public List<Integer> queryForTasks(@PathVariable Integer taskConsumerId) {
+        TaskConsumer taskConsumer = taskConsumerRepository.findByReadableId(taskConsumerId);
+        List<Integer> tasks = Scheduler.getTasks();
+        return tasks;
     }
+
 }
