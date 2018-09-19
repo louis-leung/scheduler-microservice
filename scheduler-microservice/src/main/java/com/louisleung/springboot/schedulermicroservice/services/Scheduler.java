@@ -1,4 +1,4 @@
-package com.louisleung.springboot.schedulermicroservice.controllers;
+package com.louisleung.springboot.schedulermicroservice.services;
 
 import com.louisleung.springboot.schedulermicroservice.models.Task;
 import com.louisleung.springboot.schedulermicroservice.repositories.TaskConsumerRepository;
@@ -19,23 +19,26 @@ public class Scheduler {
         this.taskConsumerRepository = taskConsumerRepository;
     }
 
-    public static List<Integer> getTasks() {
+    public static List<Task> getTasks() {
         /* Here, we give a task consumer all possible tasks it could consume, since we want to maximize the number
            of tasks we can offload to the consumer.
          */
-        System.out.println("1");
         List<Task> allTasks = taskRepository.findAllByOrderByDueTimeInMillis();
-        System.out.println("2");
         List<Task> assignedTasks = new ArrayList<>();
-        System.out.println("3");
-        List<Integer> assignedTaskNumbers = new ArrayList<>();
-        System.out.println("4");
+        /* This is the projected time to complete all the tasks we've assigned thus far. */
+        long projectedTime = System.currentTimeMillis();
         for (Task task : allTasks) {
-            assignedTasks.add(task);
-            assignedTaskNumbers.add(task.getReadableId());
+            /* This task is still completable, assign to consumer. */
+            if (projectedTime + task.getDuration() < task.getDueTimeInMillis()) {
+                assignedTasks.add(task);
+                projectedTime += task.getDueTimeInMillis();
+            }
+            /* Task not feasible for this consumer. */
+            else {
+
+            }
         }
-        System.out.println("5");
-        return assignedTaskNumbers;
+        return assignedTasks;
 
         //return taskRepository.findFirstByOrderByDueTimeInMillis();
     }

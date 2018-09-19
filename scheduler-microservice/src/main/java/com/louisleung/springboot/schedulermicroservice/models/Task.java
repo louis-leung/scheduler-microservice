@@ -23,6 +23,7 @@ public class Task {
     private long dueTimeInMillis;
     private TaskStatus status;
 
+
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
