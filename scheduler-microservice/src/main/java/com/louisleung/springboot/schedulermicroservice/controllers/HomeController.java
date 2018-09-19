@@ -1,5 +1,6 @@
 package com.louisleung.springboot.schedulermicroservice.controllers;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +15,14 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 public class HomeController {
 
     public static final String HOME_BASE_URI = "/api";
+
+//    @Value("${user.role}")
+//    private String role;
+
+//    @GetMapping(path="/configTest")
+//    String configTest() {
+//        return role;
+//    }
 
     @GetMapping(path="/", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
