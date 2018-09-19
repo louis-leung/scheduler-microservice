@@ -37,7 +37,6 @@ public class TaskConsumerController {
         this.tcResourceAssembler = tcResourceAssembler;
     }
 
-    /* TODO: Figure out why if I replace this with @RequestParam("taskConsumerId") my post never works */
     @PostMapping(path="", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Resource<TaskConsumer> registerTaskConsumer(@RequestParam("taskConsumerId") Integer taskConsumerId) {

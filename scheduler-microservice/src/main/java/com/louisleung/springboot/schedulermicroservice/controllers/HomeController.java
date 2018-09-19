@@ -1,6 +1,7 @@
 package com.louisleung.springboot.schedulermicroservice.controllers;
 
 import org.springframework.hateoas.ResourceSupport;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +13,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @RequestMapping(path="/api")
 public class HomeController {
 
+    public static final String HOME_BASE_URI = "/api";
+
     @GetMapping(path="/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
     HomeResource homePage() {
         HomeResource resource = new HomeResource();
         resource.add(linkTo(TaskConsumerController.class).withRel("Task Consumer"));
