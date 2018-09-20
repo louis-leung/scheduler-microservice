@@ -14,10 +14,12 @@ public class TaskServiceImpl implements TaskService{
     @Autowired
     TaskRepository taskRepository;
 
+    /*
     @Override
     public Task save(SubmittedTask submittedTask) {
         return taskRepository.save(new Task(submittedTask));
     }
+    */
 
     public Task save(Task task) {
         return taskRepository.save(task);
@@ -31,5 +33,10 @@ public class TaskServiceImpl implements TaskService{
     @Override
     public List<Task> findValidTasksOrdered() {
         return taskRepository.findAllTasksAwaitingAssignmentOrderByDueTimeInMillis();
+    }
+
+    @Override
+    public void delete(String id) {
+        taskRepository.deleteById(id);
     }
 }

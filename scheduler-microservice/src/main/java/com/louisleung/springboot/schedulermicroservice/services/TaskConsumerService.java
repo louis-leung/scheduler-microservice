@@ -4,6 +4,8 @@ import com.louisleung.springboot.schedulermicroservice.models.TaskConsumer;
 import com.louisleung.springboot.schedulermicroservice.exceptions.TaskConsumerNotRegisteredException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -14,4 +16,5 @@ public interface TaskConsumerService {
     void delete(String id);
     void deleteAll();
     List<TaskConsumer> findAll();
+    List<TaskConsumer> findAllFreeTCs(long epochTime);
 }

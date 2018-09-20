@@ -27,6 +27,7 @@ Navigate to ```http://localhost:8080/swagger-ui.html``` for Swagger API document
 
 #### Assumptions:
 1. A consumer won't query for more tasks until it has finished all the tasks it has been assigned.
+2. Task due dates are entered in UTC time.
 
 #### Issues and Resolutions: 
 1. Concurrency: 

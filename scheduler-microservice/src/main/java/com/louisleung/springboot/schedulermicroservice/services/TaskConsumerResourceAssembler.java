@@ -1,10 +1,16 @@
 package com.louisleung.springboot.schedulermicroservice.services;
 
 import com.louisleung.springboot.schedulermicroservice.controllers.TaskConsumerController;
+import com.louisleung.springboot.schedulermicroservice.controllers.TaskController;
+import com.louisleung.springboot.schedulermicroservice.models.Task;
 import com.louisleung.springboot.schedulermicroservice.models.TaskConsumer;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @Component
@@ -17,5 +23,11 @@ public class TaskConsumerResourceAssembler implements ResourceAssembler<TaskCons
         /* Self link. */
         //resource.add(linkTo(TaskConsumerController.class))
         return resource;
+    }
+
+    public Resources<TaskConsumer> toResource(List<TaskConsumer> taskConsumers) {
+        Resources<TaskConsumer> resources = new Resources<>(taskConsumers);
+        resources.add(linkTo(TaskConsumerController.class).withRel("Task Consumers"));
+        return resources;
     }
 }

@@ -6,6 +6,9 @@ import com.louisleung.springboot.schedulermicroservice.repositories.TaskConsumer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,5 +55,11 @@ public class TaskConsumerServiceImpl implements TaskConsumerService {
     @Override
     public List<TaskConsumer> findAll() {
         return taskConsumerRepository.findAll();
+    }
+
+    @Override
+    public List<TaskConsumer> findAllFreeTCs(long currTime) {
+        return taskConsumerRepository.findAllFreeTCs(currTime);
+        //return null;
     }
 }

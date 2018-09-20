@@ -8,8 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TaskRepository extends MongoRepository<Task,Integer> {
+public interface TaskRepository extends MongoRepository<Task,String> {
 
     @Query("{status: {$in: [\"AWAITING_ASSIGNMENT\"]}}).sort({dueTimeInMillis:-1}")
     List<Task> findAllTasksAwaitingAssignmentOrderByDueTimeInMillis();
+
+
 }

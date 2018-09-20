@@ -4,11 +4,13 @@ package com.louisleung.springboot.schedulermicroservice.controllers;
 import com.louisleung.springboot.schedulermicroservice.models.Task;
 import com.louisleung.springboot.schedulermicroservice.models.TaskConsumer;
 import com.louisleung.springboot.schedulermicroservice.exceptions.TaskConsumerNotRegisteredException;
+import com.louisleung.springboot.schedulermicroservice.models.TaskStatus;
 import com.louisleung.springboot.schedulermicroservice.services.Scheduler;
 import com.louisleung.springboot.schedulermicroservice.services.TaskConsumerResourceAssembler;
 import com.louisleung.springboot.schedulermicroservice.services.TaskConsumerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,6 +39,12 @@ public class TaskConsumerController {
         this.tcResourceAssembler = tcResourceAssembler;
     }
 
+    @GetMapping(path="", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public Resources<TaskConsumer> getTaskConsumers() {
+        return tcResourceAssembler.toResource(taskConsumerService.findAll());
+    }
+
     @PostMapping(path="", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Resource<TaskConsumer> registerTaskConsumer() {
@@ -46,7 +54,7 @@ public class TaskConsumerController {
 
     @GetMapping(path="/{taskConsumerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public Resource<TaskConsumer> retrieveTaskConsumers(@PathVariable String taskConsumerId) throws TaskConsumerNotRegisteredException {
+    public Resource<TaskConsumer> retrieveTaskConsumer(@PathVariable String taskConsumerId) throws TaskConsumerNotRegisteredException {
         TaskConsumer consumer = taskConsumerService.retrieve(taskConsumerId);
         return this.tcResourceAssembler.toResource(consumer);
     }
@@ -56,9 +64,7 @@ public class TaskConsumerController {
     @PostMapping(path="/{taskConsumerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<TaskConsumer> queryForTasks(@PathVariable String taskConsumerId) throws TaskConsumerNotRegisteredException {
         TaskConsumer taskConsumer = taskConsumerService.retrieve(taskConsumerId);
-        List<Task> tasks = Scheduler.getTasks();
-        taskConsumer.setAssignedTasks(tasks);
-        taskConsumerService.update(taskConsumer);
+        Scheduler.getAndAssignTasks(taskConsumer);
         return this.tcResourceAssembler.toResource(taskConsumer);
     }
 
