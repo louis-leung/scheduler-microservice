@@ -14,7 +14,6 @@ public class Task {
 
     @Id
     private String id;
-    private Integer readableId;
     private long duration;
     private TaskStatus status;
     @Indexed(name="Due Time", direction = IndexDirection.ASCENDING)
@@ -27,12 +26,12 @@ public class Task {
 
     public TaskStatus getStatus() { return this.status; }
 
-    public Integer getReadableId() {
-        return readableId;
+    public String getId() {
+        return id;
     }
 
-    public void setReadableId(Integer readableId) {
-        this.readableId = readableId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public long getDuration() {
@@ -63,7 +62,6 @@ public class Task {
         ZonedDateTime zdt = ldt.atZone(ZoneId.of("America/Los_Angeles"));
         this.dueTimeInMillis = zdt.toInstant().toEpochMilli();
         this.duration = submittedTask.getDuration();
-        this.readableId = submittedTask.getReadableId();
         this.status = TaskStatus.AWAITING_ASSIGNMENT;
     }
 

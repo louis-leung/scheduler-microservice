@@ -15,13 +15,19 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.hateoas.HypermediaAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.Enumeration;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -31,6 +37,8 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = SchedulerMicroserviceApplication.class)
 @AutoConfigureMockMvc
+/* Use testing profile for separate DB. */
+@ActiveProfiles("test")
 public class TaskConsumerIntegrationTests {
 
     //@Value("${local.server.port}")
@@ -44,22 +52,19 @@ public class TaskConsumerIntegrationTests {
 
 
     private MockMvc mockMvc;
-    private final Integer TEST_CONSUMER_ID = 9999;
-    private final String INVALID_TC_PARAM = "asdf";
-    TaskConsumer taskConsumer;
+    private static String testConsumerId;
+    private final Integer INVALID_TC_PARAM = 1;
 
     @Before
     public void setup() {
         System.out.println("Setting up tests.");
-        taskConsumerService.delete(TEST_CONSUMER_ID);
-        this.taskConsumer = new TaskConsumer(TEST_CONSUMER_ID);
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
     @After
     public void teardown() {
         System.out.println("Tearing down tests.");
-        taskConsumerService.delete(TEST_CONSUMER_ID);
+        taskConsumerService.deleteAll();
     }
 
     /* ================
@@ -75,61 +80,46 @@ public class TaskConsumerIntegrationTests {
 
         System.out.println(url);
 
-        //String expectedReturn = String.format("{\"readableId\":%d,\"assignedTasks\":null})",TEST_CONSUMER_ID);
-        String expectedReturn = TestUtils.asJsonString(new TaskConsumer(TEST_CONSUMER_ID));
 
-        mockMvc.perform(post(url).param("taskConsumerId",TEST_CONSUMER_ID.toString()))
+
+        MvcResult returned = mockMvc.perform(post(url))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(expectedReturn))
                 .andDo(print())
                 .andReturn();
 
     }
 
-
     @Test
-    public void WhenICreateANewTCWithValidParamsTheTCObjectIsPersisted() throws Exception {
+    public void WhenICreateANewTCWithValidParamsItIsPersisted() throws Exception {
         String url = new StringBuilder()
-                //.append("/")
+                //.append("http://localhost:8080/api/")
                 .append(TaskConsumerController.BASE_URI)
                 .toString();
 
-
         System.out.println(url);
-        mockMvc.perform(post(url).param("taskConsumerId",TEST_CONSUMER_ID.toString()))
-                .andDo(print());
-        assertEquals(TEST_CONSUMER_ID, taskConsumerService.retrieve(TEST_CONSUMER_ID).getReadableId());
-        assertNull(taskConsumerService.retrieve(TEST_CONSUMER_ID).getAssignedTasks());
-    }
-
-    @Test
-    public void WhenITryToCreateANewTCWithInvalidParamTypesIGet400() throws Exception {
-        String url = new StringBuilder()
-                //.append("/")
-                .append(TaskConsumerController.BASE_URI)
-                .toString();
 
 
-        System.out.println(url);
-        mockMvc.perform(post(url).param("taskConsumerId",INVALID_TC_PARAM))
+
+        MvcResult returned = mockMvc.perform(post(url))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andDo(print());
+                .andReturn();
+
+        assertNotNull(taskConsumerService.findAll());
     }
 
     @Test
     public void WhenITryToRetreiveAValidTCIGetOKResponseAndPayload() throws Exception {
+        /* Create the object. */
+        TaskConsumer tc = taskConsumerService.create();
+
         String url = new StringBuilder()
                 //.append("/")
                 .append(TaskConsumerController.BASE_URI)
                 .append("/")
-                .append(TEST_CONSUMER_ID)
+                .append(tc.getId())
                 .toString();
 
-
-        /* Create the object. */
-        TaskConsumer tc = taskConsumerService.save(TEST_CONSUMER_ID);
 
         String expectedReturn = TestUtils.asJsonString(tc);
 
@@ -147,7 +137,7 @@ public class TaskConsumerIntegrationTests {
                 //.append("/")
                 .append(TaskConsumerController.BASE_URI)
                 .append("/")
-                .append(TEST_CONSUMER_ID)
+                .append(INVALID_TC_PARAM)
                 .toString();
 
 
@@ -163,7 +153,7 @@ public class TaskConsumerIntegrationTests {
                 //.append("/")
                 .append(TaskConsumerController.BASE_URI)
                 .append("/")
-                .append(TEST_CONSUMER_ID)
+                .append(INVALID_TC_PARAM)
                 .toString();
 
 

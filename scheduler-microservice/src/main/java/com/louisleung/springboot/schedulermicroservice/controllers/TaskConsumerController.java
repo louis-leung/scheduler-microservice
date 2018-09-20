@@ -39,14 +39,14 @@ public class TaskConsumerController {
 
     @PostMapping(path="", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Resource<TaskConsumer> registerTaskConsumer(@RequestParam("taskConsumerId") Integer taskConsumerId) {
-        TaskConsumer newConsumer = taskConsumerService.save(taskConsumerId);
+    public Resource<TaskConsumer> registerTaskConsumer() {
+        TaskConsumer newConsumer = taskConsumerService.create();
         return this.tcResourceAssembler.toResource(newConsumer);
     }
 
     @GetMapping(path="/{taskConsumerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public Resource<TaskConsumer> retrieveTaskConsumers(@PathVariable Integer taskConsumerId) throws TaskConsumerNotRegisteredException {
+    public Resource<TaskConsumer> retrieveTaskConsumers(@PathVariable String taskConsumerId) throws TaskConsumerNotRegisteredException {
         TaskConsumer consumer = taskConsumerService.retrieve(taskConsumerId);
         return this.tcResourceAssembler.toResource(consumer);
     }
@@ -54,12 +54,12 @@ public class TaskConsumerController {
 
 
     @PostMapping(path="/{taskConsumerId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Task> queryForTasks(@PathVariable Integer taskConsumerId) throws TaskConsumerNotRegisteredException {
+    public Resource<TaskConsumer> queryForTasks(@PathVariable String taskConsumerId) throws TaskConsumerNotRegisteredException {
         TaskConsumer taskConsumer = taskConsumerService.retrieve(taskConsumerId);
         List<Task> tasks = Scheduler.getTasks();
         taskConsumer.setAssignedTasks(tasks);
         taskConsumerService.update(taskConsumer);
-        return tasks;
+        return this.tcResourceAssembler.toResource(taskConsumer);
     }
 
     @ExceptionHandler(NumberFormatException.class)

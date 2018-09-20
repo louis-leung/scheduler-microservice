@@ -19,8 +19,17 @@ public class TaskServiceImpl implements TaskService{
         return taskRepository.save(new Task(submittedTask));
     }
 
+    public Task save(Task task) {
+        return taskRepository.save(task);
+    }
+
     @Override
     public List<Task> findAll() {
         return taskRepository.findAll();
+    }
+
+    @Override
+    public List<Task> findValidTasksOrdered() {
+        return taskRepository.findAllTasksAwaitingAssignmentOrderByDueTimeInMillis();
     }
 }

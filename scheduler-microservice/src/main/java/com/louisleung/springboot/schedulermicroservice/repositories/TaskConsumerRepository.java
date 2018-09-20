@@ -8,7 +8,5 @@ import org.springframework.stereotype.Repository;
 
 /* Component without prototype makes Spring Context create the singleton bean class. */
 @Repository
-public interface TaskConsumerRepository extends MongoRepository<TaskConsumer,Integer>{
-   TaskConsumer findByReadableId(Integer readableId);
-   Long deleteByReadableId(Integer readableId);
+public interface TaskConsumerRepository extends MongoRepository<TaskConsumer,String>{
 }

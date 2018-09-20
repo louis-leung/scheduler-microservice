@@ -12,40 +12,49 @@ import java.util.List;
 
 @Component
 public class Scheduler {
-    private static TaskRepository taskRepository;
-    private static TaskConsumerRepository taskConsumerRepository;
+    private static TaskServiceImpl taskService;
+    private static TaskConsumerServiceImpl taskConsumerService;
 
     @Autowired
-    public Scheduler(TaskRepository taskRepository, TaskConsumerRepository taskConsumerRepository) {
-        this.taskRepository = taskRepository;
-        this.taskConsumerRepository = taskConsumerRepository;
+    public Scheduler(TaskConsumerServiceImpl taskConsumerService, TaskServiceImpl taskService) {
+        this.taskService = taskService;
+        this.taskConsumerService = taskConsumerService;
     }
 
     public static List<Task> getTasks() {
         /* Here, we give a task consumer all possible tasks it could consume, since we want to maximize the number
            of tasks we can offload to the consumer.
          */
-        List<Task> allTasks = taskRepository.findAllByOrderByDueTimeInMillis();
+        List<Task> allTasks = taskService.findValidTasksOrdered();
+
+
         List<Task> assignedTasks = new ArrayList<>();
         /* This is the projected time to complete all the tasks we've assigned thus far. */
         long projectedTime = System.currentTimeMillis();
         for (Task task : allTasks) {
+            System.out.printf("Current task: %s",task);
             /* Task expired, mark as such and continue. */
             if (System.currentTimeMillis() + task.getDuration() > task.getDueTimeInMillis()) {
+                System.out.println("tASK EXPIRED, marking and saving");
                 task.setStatus(TaskStatus.EXPIRED);
+                taskService.save(task);
                 continue;
             }
             /* This task is still completable, assign to consumer. */
             if (projectedTime + task.getDuration() < task.getDueTimeInMillis()) {
+                System.out.println("TASK ASSIGNED");
                 assignedTasks.add(task);
-                projectedTime += task.getDueTimeInMillis();
+                projectedTime += task.getDuration();
                 task.setStatus(TaskStatus.ASSIGNED);
+                taskService.save(task);
             }
             /* Task not feasible for this consumer. */
             else {
 
             }
         }
+        System.out.println("Returning assigned tasks:");
+        System.out.println(assignedTasks.toString());
         return assignedTasks;
 
         //return taskRepository.findFirstByOrderByDueTimeInMillis();

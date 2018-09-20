@@ -13,7 +13,7 @@ public class TaskConsumerResourceAssembler implements ResourceAssembler<TaskCons
     public Resource<TaskConsumer> toResource(TaskConsumer taskConsumer) {
         Resource<TaskConsumer> resource = new Resource<>(taskConsumer);
         /* Where to find and utilize this task consumer we just created. */
-        resource.add(linkTo(TaskConsumerController.class).slash(taskConsumer.getReadableId()).withRel("Task Consumer"));
+        resource.add(linkTo(TaskConsumerController.class).slash(taskConsumer.getId()).withRel("Task Consumer"));
         /* Self link. */
         //resource.add(linkTo(TaskConsumerController.class))
         return resource;

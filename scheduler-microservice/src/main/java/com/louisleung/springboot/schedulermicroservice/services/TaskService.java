@@ -10,4 +10,5 @@ import java.util.List;
 public interface TaskService {
     Task save(SubmittedTask submittedTask);
     List<Task> findAll();
+    List<Task> findValidTasksOrdered();
 }

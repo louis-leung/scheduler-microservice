@@ -6,14 +6,18 @@ import com.louisleung.springboot.schedulermicroservice.repositories.TaskConsumer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class TaskConsumerServiceImpl implements TaskConsumerService {
     @Autowired
     TaskConsumerRepository taskConsumerRepository;
 
+
     @Override
-    public TaskConsumer retrieve(Integer id) throws TaskConsumerNotRegisteredException {
-        TaskConsumer taskConsumer = taskConsumerRepository.findByReadableId(id);
+    public TaskConsumer retrieve(String id) throws TaskConsumerNotRegisteredException {
+        TaskConsumer taskConsumer = taskConsumerRepository.findById(id).orElse(null);
         if (taskConsumer == null) {
             throw new TaskConsumerNotRegisteredException(id);
         }
@@ -21,17 +25,32 @@ public class TaskConsumerServiceImpl implements TaskConsumerService {
     }
 
     @Override
-    public TaskConsumer save(Integer id) {
-        return taskConsumerRepository.save(new TaskConsumer(id));
+    public TaskConsumer create() {
+        return taskConsumerRepository.save(new TaskConsumer());
+    }
+
+
+    public TaskConsumer create(TaskConsumer taskConsumer) {
+        return taskConsumerRepository.save(taskConsumer);
     }
 
     @Override
-    public long delete(Integer id) {
-        return taskConsumerRepository.deleteByReadableId(id);
+    public void delete(String id) {
+        taskConsumerRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        taskConsumerRepository.deleteAll();
     }
 
     @Override
     public TaskConsumer update(TaskConsumer taskConsumer) {
        return taskConsumerRepository.save(taskConsumer);
+    }
+
+    @Override
+    public List<TaskConsumer> findAll() {
+        return taskConsumerRepository.findAll();
     }
 }

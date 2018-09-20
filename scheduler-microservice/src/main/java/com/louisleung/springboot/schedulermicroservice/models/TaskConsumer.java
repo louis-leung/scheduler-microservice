@@ -10,15 +10,14 @@ public class TaskConsumer {
 
     @Id
     private String id;
-    private Integer readableId;
     private List<Task> assignedTasks;
 
-    public Integer getReadableId() {
-        return readableId;
+    public String getId() {
+        return id;
     }
 
-    public void setReadableId(Integer readableId) {
-        this.readableId = readableId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public List<Task> getAssignedTasks() {
@@ -29,8 +28,8 @@ public class TaskConsumer {
         this.assignedTasks = assignedTasks;
     }
 
-    public TaskConsumer(Integer readableId) {
-        this.readableId = readableId;
+    public TaskConsumer(String id) {
+        this.id = id;
     }
 
     /* Default constructor necessary to map Response Bodies to POJOS. */

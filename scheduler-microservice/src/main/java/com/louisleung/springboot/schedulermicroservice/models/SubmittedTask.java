@@ -1,7 +1,7 @@
 package com.louisleung.springboot.schedulermicroservice.models;
 
+
 public class SubmittedTask {
-    private Integer readableId;
     private int month;
     private int day;
     private int year;
@@ -18,8 +18,7 @@ public class SubmittedTask {
         this.duration = duration;
     }
 
-    public SubmittedTask(Integer readableId, int month, int day, int year, int hour, int minute, int seconds) {
-        this.readableId = readableId;
+    public SubmittedTask(int month, int day, int year, int hour, int minute, int seconds) {
         this.month = month;
         this.day = day;
         this.year = year;
@@ -30,14 +29,6 @@ public class SubmittedTask {
 
     public SubmittedTask() {
 
-    }
-
-    public Integer getReadableId() {
-        return readableId;
-    }
-
-    public void setReadableId(Integer readableId) {
-        this.readableId = readableId;
     }
 
     public int getMonth() {
