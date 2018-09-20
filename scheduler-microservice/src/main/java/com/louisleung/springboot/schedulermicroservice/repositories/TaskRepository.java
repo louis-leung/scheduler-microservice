@@ -13,5 +13,8 @@ public interface TaskRepository extends MongoRepository<Task,String> {
     @Query("{status: {$in: [\"AWAITING_ASSIGNMENT\"]}}).sort({dueTimeInMillis:-1}")
     List<Task> findAllTasksAwaitingAssignmentOrderByDueTimeInMillis();
 
+    @Query("{\"latestStartTimeInMillis\" : {$lt : ?0}}")
+    List<Task> findExpiredTasks(long currTime);
+
 
 }

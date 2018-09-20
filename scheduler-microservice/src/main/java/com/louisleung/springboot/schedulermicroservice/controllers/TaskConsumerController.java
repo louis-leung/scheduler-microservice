@@ -63,6 +63,7 @@ public class TaskConsumerController {
 
     @PostMapping(path="/{taskConsumerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Resource<TaskConsumer> queryForTasks(@PathVariable String taskConsumerId) throws TaskConsumerNotRegisteredException {
+        Scheduler.markExpired();
         TaskConsumer taskConsumer = taskConsumerService.retrieve(taskConsumerId);
         Scheduler.getAndAssignTasks(taskConsumer);
         return this.tcResourceAssembler.toResource(taskConsumer);

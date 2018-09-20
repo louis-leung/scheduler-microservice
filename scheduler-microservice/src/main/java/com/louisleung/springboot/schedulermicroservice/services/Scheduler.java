@@ -28,16 +28,9 @@ public class Scheduler {
     }
 
     public static Report generateReport() {
-
+        /* First find the available consumers, and then attempt to generate a schedule with them. */
         List<TaskConsumer> availableTCs = taskConsumerService.findAllFreeTCs(System.currentTimeMillis());
-        for (TaskConsumer availableTC : availableTCs) {
-            System.out.printf("TC IS AVAILABLE: %s\n\n\n",availableTC.getId());
-        }
-        Report report = generateSchedule(availableTCs);
-        if (report == null) {
-            return new Report(Report.ReportStatus.INABLE_TO_COMPLETE_GIVEN_CURRENT_STATE);
-        }
-        return report;
+        return generateSchedule(availableTCs);
     }
 
     private static Report generateSchedule(List<TaskConsumer> availableTCs) {
@@ -54,7 +47,7 @@ public class Scheduler {
 
         /* For each available consumer, assign it all the tasks. */
         for (TaskConsumer availableTC : availableTCs) {
-            List<Task> tasksForSingleTC = assignTasks(availableTC, availableTasks);
+            List<Task> tasksForSingleTC = getTasks(availableTasks);
             allAssignedTasks.addAll(tasksForSingleTC);
             availableTasks.removeAll(tasksForSingleTC);
 
@@ -68,12 +61,12 @@ public class Scheduler {
            return new Report(assignments);
        }
        else {
-           return null;
+           return new Report(Report.ReportStatus.INABLE_TO_COMPLETE_GIVEN_CURRENT_STATE);
        }
 
     }
 
-    public static List<Task> assignTasks(TaskConsumer taskConsumer, List<Task> tasks) {
+    public static List<Task> getTasks(List<Task> tasks) {
 
         List<Task> assignedTasks = new ArrayList<>();
         /* This is the projected time to complete all the tasks we've assigned thus far. */
@@ -82,7 +75,6 @@ public class Scheduler {
 //            System.out.printf("Current task: %s",task);
             /* This task is still completable, assign to consumer. */
             if (projectedTime + task.getDuration() < task.getDueTimeInMillis()) {
-                System.out.println("TASK ASSIGNED");
                 assignedTasks.add(task);
                 projectedTime += task.getDuration();
                 /* After we assign a task, we assume the consumer will accomplish all tasks and we no longer need
@@ -93,45 +85,24 @@ public class Scheduler {
         return assignedTasks;
     }
 
-
-
     public static void getAndAssignTasks(TaskConsumer taskConsumer) {
-        /* Here, we give a task consumer all possible tasks it could consume, since we want to maximize the number
-           of tasks we can offload to the consumer.
-         */
-        List<Task> allTasks = taskService.findValidTasksOrdered();
-
-
-        List<Task> assignedTasks = new ArrayList<>();
-        /* This is the projected time to complete all the tasks we've assigned thus far. */
-        long projectedTime = System.currentTimeMillis();
-        for (Task task : allTasks) {
-            System.out.printf("Current task: %s",task);
-            /* Task expired, mark as such and continue. */
-            if (System.currentTimeMillis() + task.getDuration() > task.getDueTimeInMillis()) {
-                System.out.println("tASK EXPIRED, marking and saving");
-                task.setStatus(TaskStatus.EXPIRED);
-                taskService.save(task);
-                continue;
-            }
-            /* This task is still completable, assign to consumer. */
-            if (projectedTime + task.getDuration() < task.getDueTimeInMillis()) {
-                System.out.println("TASK ASSIGNED");
-                assignedTasks.add(task);
-                projectedTime += task.getDuration();
-                task.setStatus(TaskStatus.ASSIGNED);
-                /* After we assign a task, we assume the consumer will accomplish all tasks and we no longer need
-                   to worry about it. */
-                taskService.delete(task.getId());
-            }
-            /* Task not feasible for this consumer. */
-            else {
-
-            }
+        List<Task> assignedTasks = getTasks(taskService.findValidTasksOrdered());
+        for (Task task : assignedTasks) {
+            task.setStatus(TaskStatus.ASSIGNED);
+            taskService.save(task);
         }
         taskConsumer.setAssignedTasks(assignedTasks);
         taskConsumerService.update(taskConsumer);
+    }
 
-        //return taskRepository.findFirstByOrderByDueTimeInMillis();
+
+    public static void markExpired() {
+        /* Marks expired tasks. */
+        List<Task> expired = taskService.findExpiredTasks(System.currentTimeMillis());
+        for (Task task : expired) {
+            task.setStatus(TaskStatus.EXPIRED);
+            taskService.save(task);
+        }
+
     }
 }

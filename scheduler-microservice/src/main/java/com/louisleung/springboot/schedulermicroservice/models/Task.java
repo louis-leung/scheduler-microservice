@@ -1,5 +1,6 @@
 package com.louisleung.springboot.schedulermicroservice.models;
 
+import com.louisleung.springboot.schedulermicroservice.exceptions.ExpiredTaskException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -22,6 +23,16 @@ public class Task {
     private Date dueTimeInUTC;
     @Indexed(name="Due Time", direction = IndexDirection.ASCENDING)
     private long dueTimeInMillis;
+    private long latestStartTimeInMillis;
+
+
+    public long getLatestStartTimeInMillis() {
+        return latestStartTimeInMillis;
+    }
+
+    public void setLatestStartTimeInMillis(long latestStartTimeInMillis) {
+        this.latestStartTimeInMillis = latestStartTimeInMillis;
+    }
 
     public Date getDueTimeInUTC() {
         return dueTimeInUTC;
@@ -61,13 +72,17 @@ public class Task {
         this.dueTimeInMillis = dueTimeInMillis;
     }
 
-    public Task(Date dateAndtime, long duration) {
+    public Task(Date dateAndtime, long duration) throws ExpiredTaskException {
         /* Assumes all task times are submitted in UTC time. Due time date/millis is by UTC. */
         this.dueTimeInUTC = dateAndtime;
 //        this.dueTimeInMillis = dateAndtime.toEpochSecond(ZoneOffset.UTC);
         this.dueTimeInMillis = dateAndtime.getTime();
         this.duration = duration;
         this.status = TaskStatus.AWAITING_ASSIGNMENT;
+        this.latestStartTimeInMillis = dueTimeInMillis - duration;
+        if (latestStartTimeInMillis <= System.currentTimeMillis()) {
+            throw new ExpiredTaskException();
+        }
     }
 
 

@@ -2,6 +2,7 @@ package com.louisleung.springboot.schedulermicroservice.controllers;
 
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.louisleung.springboot.schedulermicroservice.exceptions.ExpiredTaskException;
 import com.louisleung.springboot.schedulermicroservice.models.Task;
 import com.louisleung.springboot.schedulermicroservice.models.SubmittedTask;
 import com.louisleung.springboot.schedulermicroservice.repositories.TaskRepository;
@@ -47,9 +48,7 @@ public class TaskController {
     @ResponseStatus(HttpStatus.CREATED)
     public Resource<Task> registerTask(@RequestParam("datetime")
                                        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") Date dateTime,
-                                       @RequestParam("duration") long duration) {
-        System.out.println(dateTime);
-        System.out.println(dateTime.getTime());
+                                       @RequestParam("duration") long duration) throws ExpiredTaskException {
         Task task = taskService.save(new Task(dateTime, duration));
         return this.taskResourceAssembler.toResource(task);
 //        return null;

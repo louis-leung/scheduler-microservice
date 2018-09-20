@@ -39,4 +39,9 @@ public class TaskServiceImpl implements TaskService{
     public void delete(String id) {
         taskRepository.deleteById(id);
     }
+
+    @Override
+    public List<Task> findExpiredTasks(long currTime) {
+        return taskRepository.findExpiredTasks(currTime);
+    }
 }

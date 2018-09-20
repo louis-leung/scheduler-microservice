@@ -40,6 +40,7 @@ public class HomeController {
     @GetMapping(path="/report", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     Resource<Report> getReport() {
+        Scheduler.markExpired();
         return this.reportResourceAssembler.toResource(Scheduler.generateReport());
 
     }

@@ -18,15 +18,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 public class SwaggerConfig {
     private static final String SWAGGER_API_VERSION="1.0";
-    private static final String LICENSE_TEXT = "License";
-    private static final String title="Test API";
-    private static final String description = "RESTful API";
+    private static final String title="Scheduler RESTful API";
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title(title)
-                .description(description)
-                .license(LICENSE_TEXT)
                 .version(SWAGGER_API_VERSION)
                 .build();
     }
