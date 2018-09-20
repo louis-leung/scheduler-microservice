@@ -49,11 +49,12 @@
 		</dependency>
 
 		<!-- Spring Web -->
-		<dependency>
-			<groupId>org.springframework.web</groupId>
-			<artifactId>servlet.mvc.annotation</artifactId>
-			<version>5.0.2.RELEASE</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.web</groupId>-->
+			<!--<artifactId>servlet.mvc.annotation</artifactId>-->
+			 <!--&lt;!&ndash; <version>4.0.0.RELEASE</version> &ndash;&gt;-->
+		<!--</dependency>-->
+
 
 		<!-- Swagger -->
 		<dependency>
@@ -94,6 +95,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-hateoas</artifactId>
 		</dependency>
+
 		<!-- Spring Boot -->
 
 		<dependency>
@@ -110,24 +112,39 @@
 
 	</dependencies>
 
+	<!--<repositories>-->
+		<!--<repository>-->
+			<!--<id>spring-snapshots</id>-->
+			<!--<name>Spring Snapshots</name>-->
+			<!--<url>https://repo.spring.io/libs-snapshot</url>-->
+			<!--<snapshots>-->
+				<!--<enabled>true</enabled>-->
+			<!--</snapshots>-->
+		<!--</repository>-->
+		<!--&lt;!&ndash;-->
+		<!--<repository>-->
+			<!--<id>spring-libs-release</id>-->
+			<!--<name>Spring Releases</name>-->
+			<!--<url>https://repo.spring.io/libs-release</url>-->
+			<!--<snapshots>-->
+				<!--<enabled>true</enabled>-->
+			<!--</snapshots>-->
+		<!--</repository>-->
+		<!--&ndash;&gt;-->
+	<!--</repositories>-->
+
 	<repositories>
 		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/libs-snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-libs-release</id>
-			<name>Spring Releases</name>
+			<id>spring-releases</id>
 			<url>https://repo.spring.io/libs-release</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
 		</repository>
 	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-releases</id>
+			<url>https://repo.spring.io/libs-release</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<build>
 		<plugins>
