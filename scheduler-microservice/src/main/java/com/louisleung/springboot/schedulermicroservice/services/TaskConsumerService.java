@@ -8,5 +8,6 @@ import org.springframework.stereotype.Service;
 public interface TaskConsumerService {
     TaskConsumer retrieve(Integer readableId) throws TaskConsumerNotRegisteredException;
     TaskConsumer save(Integer readableId);
+    TaskConsumer update(TaskConsumer taskConsumer);
     long delete(Integer readableId);
 }

@@ -1,7 +1,7 @@
 package com.louisleung.springboot.schedulermicroservice.models;
 
-public class TaskStatus {
-    public static void main(String[] args) {
-
-    }
+public enum TaskStatus {
+    AWAITING_ASSIGNMENT,
+    EXPIRED,
+    ASSIGNED;
 }

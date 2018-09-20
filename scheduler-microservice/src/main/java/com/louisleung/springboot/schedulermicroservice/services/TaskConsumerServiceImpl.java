@@ -27,8 +27,11 @@ public class TaskConsumerServiceImpl implements TaskConsumerService {
 
     @Override
     public long delete(Integer id) {
-        System.out.println("DELETING");
-        System.out.println(id);
         return taskConsumerRepository.deleteByReadableId(id);
+    }
+
+    @Override
+    public TaskConsumer update(TaskConsumer taskConsumer) {
+       return taskConsumerRepository.save(taskConsumer);
     }
 }

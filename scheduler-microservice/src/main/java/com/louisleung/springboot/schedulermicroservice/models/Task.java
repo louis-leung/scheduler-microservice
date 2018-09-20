@@ -11,22 +11,21 @@ import java.time.ZonedDateTime;
 
 @Document
 public class Task {
-    public enum TaskStatus {
-        AWAITING_ASSIGNMENT,
-        ASSIGNED;
-    }
+
     @Id
     private String id;
     private Integer readableId;
     private long duration;
+    private TaskStatus status;
     @Indexed(name="Due Time", direction = IndexDirection.ASCENDING)
     private long dueTimeInMillis;
-    private TaskStatus status;
 
 
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
+
+    public TaskStatus getStatus() { return this.status; }
 
     public Integer getReadableId() {
         return readableId;

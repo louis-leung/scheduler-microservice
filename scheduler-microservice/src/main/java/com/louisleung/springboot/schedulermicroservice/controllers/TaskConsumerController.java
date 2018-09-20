@@ -40,7 +40,6 @@ public class TaskConsumerController {
     @PostMapping(path="", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Resource<TaskConsumer> registerTaskConsumer(@RequestParam("taskConsumerId") Integer taskConsumerId) {
-        System.out.println("ABOUT TO REGISTER CONSUMER");
         TaskConsumer newConsumer = taskConsumerService.save(taskConsumerId);
         return this.tcResourceAssembler.toResource(newConsumer);
     }
@@ -58,6 +57,8 @@ public class TaskConsumerController {
     public List<Task> queryForTasks(@PathVariable Integer taskConsumerId) throws TaskConsumerNotRegisteredException {
         TaskConsumer taskConsumer = taskConsumerService.retrieve(taskConsumerId);
         List<Task> tasks = Scheduler.getTasks();
+        taskConsumer.setAssignedTasks(tasks);
+        taskConsumerService.update(taskConsumer);
         return tasks;
     }
 

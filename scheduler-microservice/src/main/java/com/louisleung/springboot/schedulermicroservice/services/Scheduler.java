@@ -1,6 +1,7 @@
 package com.louisleung.springboot.schedulermicroservice.services;
 
 import com.louisleung.springboot.schedulermicroservice.models.Task;
+import com.louisleung.springboot.schedulermicroservice.models.TaskStatus;
 import com.louisleung.springboot.schedulermicroservice.repositories.TaskConsumerRepository;
 import com.louisleung.springboot.schedulermicroservice.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ public class Scheduler {
     private static TaskRepository taskRepository;
     private static TaskConsumerRepository taskConsumerRepository;
 
+    @Autowired
     public Scheduler(TaskRepository taskRepository, TaskConsumerRepository taskConsumerRepository) {
         this.taskRepository = taskRepository;
         this.taskConsumerRepository = taskConsumerRepository;
@@ -28,10 +30,16 @@ public class Scheduler {
         /* This is the projected time to complete all the tasks we've assigned thus far. */
         long projectedTime = System.currentTimeMillis();
         for (Task task : allTasks) {
+            /* Task expired, mark as such and continue. */
+            if (System.currentTimeMillis() + task.getDuration() > task.getDueTimeInMillis()) {
+                task.setStatus(TaskStatus.EXPIRED);
+                continue;
+            }
             /* This task is still completable, assign to consumer. */
             if (projectedTime + task.getDuration() < task.getDueTimeInMillis()) {
                 assignedTasks.add(task);
                 projectedTime += task.getDueTimeInMillis();
+                task.setStatus(TaskStatus.ASSIGNED);
             }
             /* Task not feasible for this consumer. */
             else {

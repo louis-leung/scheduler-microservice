@@ -1,7 +1,13 @@
 package com.louisleung.springboot.schedulermicroservice.services;
 
-public class TaskService {
-    public static void main(String[] args) {
+import com.louisleung.springboot.schedulermicroservice.models.SubmittedTask;
+import com.louisleung.springboot.schedulermicroservice.models.Task;
+import org.springframework.stereotype.Service;
 
-    }
+import java.util.List;
+
+@Service
+public interface TaskService {
+    Task save(SubmittedTask submittedTask);
+    List<Task> findAll();
 }
