@@ -1,29 +1,20 @@
 package com.louisleung.springboot.schedulermicroservice.controllers;
 
 
-import com.louisleung.springboot.schedulermicroservice.models.Task;
 import com.louisleung.springboot.schedulermicroservice.models.TaskConsumer;
 import com.louisleung.springboot.schedulermicroservice.exceptions.TaskConsumerNotRegisteredException;
-import com.louisleung.springboot.schedulermicroservice.models.TaskStatus;
 import com.louisleung.springboot.schedulermicroservice.services.Scheduler;
 import com.louisleung.springboot.schedulermicroservice.services.TaskConsumerResourceAssembler;
 import com.louisleung.springboot.schedulermicroservice.services.TaskConsumerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path="/api/taskConsumer")
-//@EnableHypermediaSupport
 public class TaskConsumerController {
 
     public static final String BASE_URI = "/api/taskConsumer";

@@ -14,7 +14,6 @@ import java.util.List;
 /* Component without prototype makes Spring Context create the singleton bean class. */
 @Repository
 public interface TaskConsumerRepository extends MongoRepository<TaskConsumer,String>{
-//    @Query("{\"dateWhenAvailable\" : {$lte : new Date(Date())}}")
     @Query("{\"epochTimeWhenAvailable\" : {$lte : ?0}}")
     public List<TaskConsumer> findAllFreeTCs(long epochTime);
 

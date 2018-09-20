@@ -42,7 +42,6 @@ public class HomeController {
     Resource<Report> getReport() {
         Scheduler.markExpired();
         return this.reportResourceAssembler.toResource(Scheduler.generateReport());
-
     }
 
     private class HomeResource extends ResourceSupport {

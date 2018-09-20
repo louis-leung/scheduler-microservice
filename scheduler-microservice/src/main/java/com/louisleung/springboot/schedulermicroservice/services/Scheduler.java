@@ -4,16 +4,9 @@ import com.louisleung.springboot.schedulermicroservice.models.Report;
 import com.louisleung.springboot.schedulermicroservice.models.Task;
 import com.louisleung.springboot.schedulermicroservice.models.TaskConsumer;
 import com.louisleung.springboot.schedulermicroservice.models.TaskStatus;
-import com.louisleung.springboot.schedulermicroservice.repositories.TaskConsumerRepository;
-import com.louisleung.springboot.schedulermicroservice.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
 import org.springframework.stereotype.Component;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.*;
 
 @Component
