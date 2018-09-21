@@ -1,5 +1,5 @@
 # Overview
-This is a scheduler microservice API that can accept tasks, distribute them to task consumers, and return a scheduling policy when requested. This is comprised of an application (backed by MongoDB) and a Spring Cloud Config Server.
+This is a scheduler microservice API that deals with dynamic interactions between Tasks and Task Consumers and the generation of a scheduling policy at a given point in time. It is comprised of a Spring Boot application (backed by MongoDB) and a Spring Cloud Config Server.
 
 ## Config Server
 You must launch the config server before running the Application.
@@ -18,6 +18,7 @@ To run:
 - ``` mvn spring-boot:run ```
 
 Navigate to ```http://localhost:8080/swagger-ui.html``` for Swagger API documentation and usage.
+To refresh configuration, make a POST request to ```http://localhost:8090/actuator/refresh```
 
 ## Testing
 - ``` cd scheduler-microservice```
@@ -27,7 +28,7 @@ Navigate to ```http://localhost:8080/swagger-ui.html``` for Swagger API document
 
 #### Assumptions:
 1. A consumer won't query for more tasks until it has finished all the tasks it has been assigned.
-2. Task due dates are entered in UTC time.
+2. Task due dates are entered in local time.
 
 #### Issues and Resolutions: 
 1. Concurrency: 
@@ -36,3 +37,4 @@ Navigate to ```http://localhost:8080/swagger-ui.html``` for Swagger API document
     
 #### Improvements Needed:
 - The integration tests currently only test for correct JSON payload of the object created as opposed to the entire Resource wrapper (with links). This is due to some object mapper conflicts that I haven't resolved yet. 
+- Not complete code coverage on tests.
