@@ -1,5 +1,6 @@
 package com.louisleung.springboot.schedulermicroservice.services;
 
+import com.louisleung.springboot.schedulermicroservice.controllers.HomeController;
 import com.louisleung.springboot.schedulermicroservice.controllers.TaskConsumerController;
 import com.louisleung.springboot.schedulermicroservice.controllers.TaskController;
 import com.louisleung.springboot.schedulermicroservice.models.Task;
@@ -19,14 +20,18 @@ public class TaskResourceAssembler implements ResourceAssembler<Task, Resource<T
     public Resource<Task> toResource(Task task) {
         Resource<Task> resource = new Resource<>(task);
         /* Link to all tasks to view. */
-        resource.add(linkTo(TaskController.class).withRel("Tasks"));
-        /* Self link. */
+        resource.add(linkTo(TaskController.class).withRel("tasks"));
+        resource.add(linkTo(TaskConsumerController.class).withRel("task consumers"));
+        resource.add(linkTo(HomeController.class).slash("report").withRel("report"));
         return resource;
+
     }
 
     public Resources<Task> toResource(List<Task> task) {
         Resources<Task> resources = new Resources<>(task);
-        resources.add(linkTo(TaskController.class).withRel("Tasks"));
+        resources.add(linkTo(TaskController.class).withRel("tasks"));
+        resources.add(linkTo(TaskConsumerController.class).withRel("task consumers"));
+        resources.add(linkTo(HomeController.class).slash("report").withRel("report"));
         return resources;
     }
 }

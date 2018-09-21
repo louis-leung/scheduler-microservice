@@ -4,6 +4,7 @@ package com.louisleung.springboot.schedulermicroservice.controllers;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.louisleung.springboot.schedulermicroservice.exceptions.ExpiredTaskException;
 import com.louisleung.springboot.schedulermicroservice.models.Task;
+import com.louisleung.springboot.schedulermicroservice.services.Scheduler;
 import com.louisleung.springboot.schedulermicroservice.services.TaskResourceAssembler;
 import com.louisleung.springboot.schedulermicroservice.services.TaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ public class TaskController {
         this.taskResourceAssembler = taskResourceAssembler;
     }
 
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Resource<Task> registerTask(@RequestParam("datetime")
@@ -42,6 +42,7 @@ public class TaskController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Resources<Task> getTasks() {
+        Scheduler.markExpired();
         return taskResourceAssembler.toResource(taskService.findAll());
     }
 

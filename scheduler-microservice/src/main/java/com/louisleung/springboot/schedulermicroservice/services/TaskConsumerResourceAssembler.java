@@ -1,5 +1,6 @@
 package com.louisleung.springboot.schedulermicroservice.services;
 
+import com.louisleung.springboot.schedulermicroservice.controllers.HomeController;
 import com.louisleung.springboot.schedulermicroservice.controllers.TaskConsumerController;
 import com.louisleung.springboot.schedulermicroservice.controllers.TaskController;
 import com.louisleung.springboot.schedulermicroservice.models.Task;
@@ -19,15 +20,19 @@ public class TaskConsumerResourceAssembler implements ResourceAssembler<TaskCons
     public Resource<TaskConsumer> toResource(TaskConsumer taskConsumer) {
         Resource<TaskConsumer> resource = new Resource<>(taskConsumer);
         /* Where to find and utilize this task consumer we just created. */
-        resource.add(linkTo(TaskConsumerController.class).slash(taskConsumer.getId()).withRel("Task Consumer"));
+        resource.add(linkTo(TaskConsumerController.class).slash(taskConsumer.getId()).withRel("newly created task consumer"));
         /* Self link. */
-        //resource.add(linkTo(TaskConsumerController.class))
+        resource.add(linkTo(TaskConsumerController.class).withRel("task consumers"));
+        resource.add(linkTo(Task.class).withRel("tasks"));
+        resource.add(linkTo(HomeController.class).slash("report").withRel("report"));
         return resource;
     }
 
     public Resources<TaskConsumer> toResource(List<TaskConsumer> taskConsumers) {
         Resources<TaskConsumer> resources = new Resources<>(taskConsumers);
-        resources.add(linkTo(TaskConsumerController.class).withRel("Task Consumers"));
+        resources.add(linkTo(TaskConsumerController.class).withRel("task consumers"));
+        resources.add(linkTo(Task.class).withRel("tasks"));
+        resources.add(linkTo(HomeController.class).slash("report").withRel("report"));
         return resources;
     }
 }

@@ -20,7 +20,6 @@ public class Task {
     private String id;
     private long duration;
     private TaskStatus status;
-    private Date dueTimeInUTC;
     @Indexed(name="Due Time", direction = IndexDirection.ASCENDING)
     private long dueTimeInMillis;
     private long latestStartTimeInMillis;
@@ -32,14 +31,6 @@ public class Task {
 
     public void setLatestStartTimeInMillis(long latestStartTimeInMillis) {
         this.latestStartTimeInMillis = latestStartTimeInMillis;
-    }
-
-    public Date getDueTimeInUTC() {
-        return dueTimeInUTC;
-    }
-
-    public void setDueTimeInUTC(Date dueTimeInUTC) {
-        this.dueTimeInUTC = dueTimeInUTC;
     }
 
     public void setStatus(TaskStatus status) {
@@ -73,13 +64,17 @@ public class Task {
     }
 
     public Task(Date dateAndtime, long duration) throws ExpiredTaskException {
-        /* Assumes all task times are submitted in UTC time. Due time date/millis is by UTC. */
-        this.dueTimeInUTC = dateAndtime;
-//        this.dueTimeInMillis = dateAndtime.toEpochSecond(ZoneOffset.UTC);
         this.dueTimeInMillis = dateAndtime.getTime();
+        System.out.printf("Creating Task with due time in UTC:\n");
+        System.out.println("Due time in Millis:");
+        System.out.println(dueTimeInMillis);
         this.duration = duration;
         this.status = TaskStatus.AWAITING_ASSIGNMENT;
         this.latestStartTimeInMillis = dueTimeInMillis - duration;
+        System.out.println("Before");
+        System.out.printf("Latest start time: %d\n\n\n",latestStartTimeInMillis);
+        System.out.printf("Current time: %d\n\n\n", System.currentTimeMillis());
+        System.out.println("After");
         if (latestStartTimeInMillis <= System.currentTimeMillis()) {
             throw new ExpiredTaskException();
         }
