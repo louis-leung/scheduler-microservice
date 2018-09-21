@@ -1,10 +1,10 @@
 package com.louisleung.springboot.schedulermicroservice.models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 @Document
@@ -13,6 +13,7 @@ public class TaskConsumer {
     @Id
     private String id;
     private List<Task> assignedTasks;
+    @Indexed(name="Time When Available", direction = IndexDirection.ASCENDING)
     private long epochTimeWhenAvailable;
 
     public String getId() {

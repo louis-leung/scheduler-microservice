@@ -10,14 +10,13 @@ import java.util.Map;
 public class Report {
     public enum ReportStatus {
         ABLE_TO_COMPLETE,
-        INABLE_TO_COMPLETE_GIVEN_CURRENT_STATE;
+        UNABLE_TO_COMPLETE_GIVEN_CURRENT_STATE;
     }
 
     private ReportStatus status;
     private Map<TaskConsumer,List<Task>> schedule;
 
     public Report() {
-
     }
 
     public ReportStatus getStatus() {

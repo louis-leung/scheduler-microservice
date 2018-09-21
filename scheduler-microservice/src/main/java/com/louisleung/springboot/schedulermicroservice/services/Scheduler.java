@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+/* This class contains the main scheduling logic. */
 @Component
 public class Scheduler {
     private static TaskServiceImpl taskService;
@@ -27,45 +28,43 @@ public class Scheduler {
     }
 
     private static Report generateSchedule(List<TaskConsumer> availableTCs) {
-        System.out.println("Generating schedule for TCs");
 
-        List<Task> availableTasks = new ArrayList<>();
+        /* Create two copies of the list of tasks to be completed. */
+        List<Task> tasksLeft = new ArrayList<>();
         List<Task> toBeCompletedTasks = new ArrayList<>();
         toBeCompletedTasks.addAll(taskService.findValidTasksOrdered());
-        availableTasks.addAll(toBeCompletedTasks);
+        tasksLeft.addAll(toBeCompletedTasks);
 
         List<Task> allAssignedTasks = new ArrayList<>();
 
         Map<TaskConsumer, List<Task>> assignments = new HashMap<>();
 
-        /* For each available consumer, assign it all the tasks. */
+        /* For each available consumer, assign it as many tasks as possible from the tasks we have left. */
         for (TaskConsumer availableTC : availableTCs) {
-            List<Task> tasksForSingleTC = getTasks(availableTasks);
+            List<Task> tasksForSingleTC = getTasks(tasksLeft);
             allAssignedTasks.addAll(tasksForSingleTC);
-            availableTasks.removeAll(tasksForSingleTC);
-
+            tasksLeft.removeAll(tasksForSingleTC);
             assignments.put(availableTC, tasksForSingleTC);
         }
 
         /* Check if we've completed all the tasks. */
        if (allAssignedTasks.containsAll(toBeCompletedTasks)) {
-           System.out.println("Schedule successfully generated");
            /* We've completed all our tasks, create report. */
            return new Report(assignments);
        }
        else {
-           return new Report(Report.ReportStatus.INABLE_TO_COMPLETE_GIVEN_CURRENT_STATE);
+           /* Unable to complete tasks, create report. */
+           return new Report(Report.ReportStatus.UNABLE_TO_COMPLETE_GIVEN_CURRENT_STATE);
        }
 
     }
 
+    /* Returns a potential sequence of tasks that could be done at this moment, without updating any actual state. */
     public static List<Task> getTasks(List<Task> tasks) {
-
         List<Task> assignedTasks = new ArrayList<>();
         /* This is the projected time to complete all the tasks we've assigned thus far. */
         long projectedTime = System.currentTimeMillis();
         for (Task task : tasks) {
-//            System.out.printf("Current task: %s",task);
             /* This task is still completable, assign to consumer. */
             if (projectedTime + task.getDuration() < task.getDueTimeInMillis()) {
                 assignedTasks.add(task);
@@ -78,6 +77,7 @@ public class Scheduler {
         return assignedTasks;
     }
 
+    /* Assigns tasks to a specific task consumer using getTasks method, updating state in consumer and tasks. */
     public static void getAndAssignTasks(TaskConsumer taskConsumer) {
         List<Task> assignedTasks = getTasks(taskService.findValidTasksOrdered());
         for (Task task : assignedTasks) {
@@ -88,9 +88,8 @@ public class Scheduler {
         taskConsumerService.update(taskConsumer);
     }
 
-
+    /* Marks expired tasks. */
     public static void markExpired() {
-        /* Marks expired tasks. */
         List<Task> expired = taskService.findExpiredTasks(System.currentTimeMillis());
         for (Task task : expired) {
             task.setStatus(TaskStatus.EXPIRED);

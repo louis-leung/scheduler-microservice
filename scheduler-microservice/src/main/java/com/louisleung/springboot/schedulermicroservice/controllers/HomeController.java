@@ -4,18 +4,15 @@ import com.louisleung.springboot.schedulermicroservice.models.Report;
 import com.louisleung.springboot.schedulermicroservice.services.HomeResourceAssembler;
 import com.louisleung.springboot.schedulermicroservice.services.ReportResourceAssembler;
 import com.louisleung.springboot.schedulermicroservice.services.Scheduler;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
-
-//TODO: Say produces Media Type JSON?
 @RestController
 @RequestMapping(path="/api")
 public class HomeController {
@@ -31,12 +28,24 @@ public class HomeController {
         this.homeResourceAssembler = homeResourceAssembler;
     }
 
+    @ApiOperation(value = "Returns resource containing links to other resources")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(code = 200, message = "OK")
+            }
+    )
     @GetMapping(path="/", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     Resource<String> homePage() {
         return this.homeResourceAssembler.toResource("Home Page");
     }
 
+    @ApiResponses(
+            value = {
+                    @ApiResponse(code = 200, message = "OK")
+            }
+    )
+    @ApiOperation(value = "Returns a report")
     @GetMapping(path="/report", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     Resource<Report> getReport() {

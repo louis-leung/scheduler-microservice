@@ -7,13 +7,16 @@ import com.louisleung.springboot.schedulermicroservice.models.Task;
 import com.louisleung.springboot.schedulermicroservice.services.Scheduler;
 import com.louisleung.springboot.schedulermicroservice.services.TaskResourceAssembler;
 import com.louisleung.springboot.schedulermicroservice.services.TaskServiceImpl;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import java.time.DateTimeException;
 import java.util.Date;
 
@@ -30,6 +33,14 @@ public class TaskController {
         this.taskResourceAssembler = taskResourceAssembler;
     }
 
+    @ApiOperation(value="Create a task with due date (local time) and duration (milliseconds)")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(code = 201, message = "CREATED"),
+                    @ApiResponse(code = 400, message = "TASK ALREADY EXPIRED"),
+                    @ApiResponse(code = 404, message = "INPUT MALFORMED")
+            }
+    )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Resource<Task> registerTask(@RequestParam("datetime")
@@ -39,6 +50,12 @@ public class TaskController {
         return this.taskResourceAssembler.toResource(task);
     }
 
+    @ApiOperation(value="Retrieve all tasks")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(code = 200, message = "OK")
+            }
+    )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Resources<Task> getTasks() {
@@ -46,9 +63,9 @@ public class TaskController {
         return taskResourceAssembler.toResource(taskService.findAll());
     }
 
-    @ExceptionHandler({DateTimeException.class, InvalidFormatException.class, IllegalArgumentException.class})
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "Date time, duration, and ID must be valid.")
+    @ExceptionHandler({DateTimeException.class, InvalidFormatException.class, MethodArgumentTypeMismatchException.class})
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)//, reason = "Date time must be in yyyy-MM-dd'T'HH:mm:ss.SSS format and duration must be an integer")
     public String handleBadInput(Exception e) {
-        return e.getMessage();
+        return "Date time must be in yyyy-MM-dd'T'HH:mm:ss.SSS format and duration must be an integer";
     }
 }

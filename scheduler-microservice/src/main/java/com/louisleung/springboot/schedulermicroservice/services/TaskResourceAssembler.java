@@ -14,6 +14,9 @@ import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
+/* In compliance with RESTful trait HATEOAS, we assemble and return Resources containing links to other URIs along with the
+ * data as our response bodies.
+ */
 @Component
 public class TaskResourceAssembler implements ResourceAssembler<Task, Resource<Task>> {
     @Override

@@ -5,14 +5,12 @@ import com.louisleung.springboot.schedulermicroservice.exceptions.TaskConsumerNo
 import com.louisleung.springboot.schedulermicroservice.repositories.TaskConsumerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 public class TaskConsumerServiceImpl implements TaskConsumerService {
     @Autowired
     TaskConsumerRepository taskConsumerRepository;
-
 
     @Override
     public TaskConsumer retrieve(String id) throws TaskConsumerNotRegisteredException {
