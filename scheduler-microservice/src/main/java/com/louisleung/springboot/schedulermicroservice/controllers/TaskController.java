@@ -2,6 +2,7 @@ package com.louisleung.springboot.schedulermicroservice.controllers;
 
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.louisleung.springboot.schedulermicroservice.errors.CustomHttpErrorResponse;
 import com.louisleung.springboot.schedulermicroservice.exceptions.ExpiredTaskException;
 import com.louisleung.springboot.schedulermicroservice.models.Task;
 import com.louisleung.springboot.schedulermicroservice.services.Scheduler;
@@ -65,7 +66,7 @@ public class TaskController {
 
     @ExceptionHandler({DateTimeException.class, InvalidFormatException.class, MethodArgumentTypeMismatchException.class})
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)//, reason = "Date time must be in yyyy-MM-dd'T'HH:mm:ss.SSS format and duration must be an integer")
-    public String handleBadInput(Exception e) {
-        return "Date time must be in yyyy-MM-dd'T'HH:mm:ss.SSS format and duration must be an integer";
+    public CustomHttpErrorResponse handleBadInput(Exception e) {
+        return new CustomHttpErrorResponse("Date time must be in yyyy-MM-dd'T'HH:mm:ss.SSS format and duration must be an integer", HttpStatus.BAD_REQUEST);
     }
 }

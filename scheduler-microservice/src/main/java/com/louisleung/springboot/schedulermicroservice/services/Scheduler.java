@@ -1,9 +1,6 @@
 package com.louisleung.springboot.schedulermicroservice.services;
 
-import com.louisleung.springboot.schedulermicroservice.models.Report;
-import com.louisleung.springboot.schedulermicroservice.models.Task;
-import com.louisleung.springboot.schedulermicroservice.models.TaskConsumer;
-import com.louisleung.springboot.schedulermicroservice.models.TaskStatus;
+import com.louisleung.springboot.schedulermicroservice.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +38,7 @@ public class Scheduler {
 
         /* For each available consumer, assign it as many tasks as possible from the tasks we have left. */
         for (TaskConsumer availableTC : availableTCs) {
-            List<Task> tasksForSingleTC = getTasks(tasksLeft);
+            List<Task> tasksForSingleTC = getAssignment(tasksLeft).retrieveTasks();
             allAssignedTasks.addAll(tasksForSingleTC);
             tasksLeft.removeAll(tasksForSingleTC);
             assignments.put(availableTC, tasksForSingleTC);
@@ -60,7 +57,7 @@ public class Scheduler {
     }
 
     /* Returns a potential sequence of tasks that could be done at this moment, without updating any actual state. */
-    public static List<Task> getTasks(List<Task> tasks) {
+    public static Assignment getAssignment(List<Task> tasks) {
         List<Task> assignedTasks = new ArrayList<>();
         /* This is the projected time to complete all the tasks we've assigned thus far. */
         long projectedTime = System.currentTimeMillis();
@@ -74,17 +71,19 @@ public class Scheduler {
             }
             /* Task not feasible for this consumer. */
         }
-        return assignedTasks;
+        return new Assignment(assignedTasks, projectedTime);
     }
 
     /* Assigns tasks to a specific task consumer using getTasks method, updating state in consumer and tasks. */
     public static void getAndAssignTasks(TaskConsumer taskConsumer) {
-        List<Task> assignedTasks = getTasks(taskService.findValidTasksOrdered());
-        for (Task task : assignedTasks) {
+        Assignment assignment = getAssignment(taskService.findValidTasksOrdered());
+        for (Task task : assignment.retrieveTasks()) {
             task.setStatus(TaskStatus.ASSIGNED);
             taskService.save(task);
         }
-        taskConsumer.setAssignedTasks(assignedTasks);
+        /* Update consumer. */
+        taskConsumer.setAssignedTasks(assignment.retrieveTasks());
+        taskConsumer.setEpochTimeWhenAvailable(assignment.getProjectedTime());
         taskConsumerService.update(taskConsumer);
     }
 

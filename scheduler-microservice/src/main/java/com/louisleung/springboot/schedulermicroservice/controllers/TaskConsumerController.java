@@ -6,7 +6,6 @@ import com.louisleung.springboot.schedulermicroservice.exceptions.TaskConsumerNo
 import com.louisleung.springboot.schedulermicroservice.services.Scheduler;
 import com.louisleung.springboot.schedulermicroservice.services.TaskConsumerResourceAssembler;
 import com.louisleung.springboot.schedulermicroservice.services.TaskConsumerServiceImpl;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -87,4 +86,10 @@ public class TaskConsumerController {
         Scheduler.getAndAssignTasks(taskConsumer);
         return this.tcResourceAssembler.toResource(taskConsumer);
     }
+
+//    @ExceptionHandler({TaskConsumerNotRegisteredException.class})
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    public String handleInvalidTC(Exception e) {
+//        return "Task Consumer with Id %s has not been registered yet";
+//    }
 }

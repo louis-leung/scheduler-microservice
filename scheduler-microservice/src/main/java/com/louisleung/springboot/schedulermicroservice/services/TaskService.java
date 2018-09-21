@@ -11,4 +11,5 @@ public interface TaskService {
     List<Task> findValidTasksOrdered();
     void delete(String id);
     List<Task> findExpiredTasks(long currTime);
+    void deleteAll();
 }

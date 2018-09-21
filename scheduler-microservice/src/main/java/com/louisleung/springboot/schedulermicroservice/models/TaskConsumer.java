@@ -16,6 +16,24 @@ public class TaskConsumer {
     @Indexed(name="Time When Available", direction = IndexDirection.ASCENDING)
     private long epochTimeWhenAvailable;
 
+    /* Default constructor necessary to map Response Bodies to POJOS. */
+    public TaskConsumer() {
+        this.epochTimeWhenAvailable = Instant.now().toEpochMilli();
+    }
+
+    public TaskConsumer(String id) {
+        this.epochTimeWhenAvailable = Instant.now().toEpochMilli();
+        this.id = id;
+    }
+
+    public long getEpochTimeWhenAvailable() {
+        return epochTimeWhenAvailable;
+    }
+
+    public void setEpochTimeWhenAvailable(long epochTimeWhenAvailable) {
+        this.epochTimeWhenAvailable = epochTimeWhenAvailable;
+    }
+
     public String getId() {
         return id;
     }
@@ -32,13 +50,5 @@ public class TaskConsumer {
         this.assignedTasks = assignedTasks;
     }
 
-    public TaskConsumer(String id) {
-        this.epochTimeWhenAvailable = Instant.now().toEpochMilli();
-        this.id = id;
-    }
 
-    /* Default constructor necessary to map Response Bodies to POJOS. */
-    public TaskConsumer() {
-        this.epochTimeWhenAvailable = Instant.now().toEpochMilli();
-    }
 }

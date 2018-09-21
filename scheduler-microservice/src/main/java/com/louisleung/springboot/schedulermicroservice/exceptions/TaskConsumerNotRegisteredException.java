@@ -8,4 +8,9 @@ public final class TaskConsumerNotRegisteredException extends Exception{
     public TaskConsumerNotRegisteredException(String consumerId) {
         super(String.format("Task Consumer with Id %s has not been registered yet",consumerId));
     }
+
+    @Override
+    public String getMessage() {
+        return super.getMessage();
+    }
 }

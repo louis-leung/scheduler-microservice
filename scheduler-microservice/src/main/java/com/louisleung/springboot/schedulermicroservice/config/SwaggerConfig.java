@@ -16,7 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 public class SwaggerConfig {
     private static final String SWAGGER_API_VERSION="1.0";
-    private static final String title="Scheduler RESTful API";
+    private static final String title="Scheduler Microservice API";
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
