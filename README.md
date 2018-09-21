@@ -21,12 +21,14 @@ To run:
 
 To refresh configuration, make a POST request to ```http://localhost:8090/actuator/refresh```
 
-### Testing
+### Testing:
 The test suite uses the ```scheduler-microservice-test.properties``` profile and creates a separate database called SchedulerMicroserviceDBTest for its integration tests.
 - ``` cd scheduler-microservice```
 - ``` mvn test```
+Note: Config Server and MongoDB must be launched before running tests.
 
-
+### Algorithm:
+Scheduler uses greedy algorithm based on "Earliest Deadline First" sorting. 
 
 #### Assumptions:
 1. A consumer won't query for more tasks until it has finished all the tasks it has been assigned.
