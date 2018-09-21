@@ -22,6 +22,7 @@ To run:
 To refresh configuration, make a POST request to ```http://localhost:8090/actuator/refresh```
 
 ### Testing
+The test suite uses the ```scheduler-microservice-test.properties``` profile and creates a separate database called SchedulerMicroserviceDBTest for its integration tests.
 - ``` cd scheduler-microservice```
 - ``` mvn test```
 
@@ -36,7 +37,8 @@ To refresh configuration, make a POST request to ```http://localhost:8090/actuat
     1. What happens if two consumers query for tasks simultaneously? 
     - As of MongoDB 3.2, the WiredTiger storage engine is used and by default enables optimistic concurrency control. So if two consumers query at the same time, one query will incur a write conflict causing MongoDB to transparently retry the operation. 
     
-#### Improvements Needed:
+#### Future Improvements:
+- Make POSTing of tasks through response body not query params
 - The integration tests currently only test for correct JSON payload of the object created as opposed to the entire Resource wrapper (with links). This is due to some object mapper conflicts that I haven't resolved yet. 
 - Not complete code coverage on tests.
 - Some form of authentication. (e.g. access token)
