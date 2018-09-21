@@ -41,9 +41,6 @@ import static org.junit.Assert.*;
 @ActiveProfiles("test")
 public class TaskConsumerIntegrationTests {
 
-    //@Value("${local.server.port}")
-    //private int port;
-
     @Autowired
     private WebApplicationContext context;
 
