@@ -2,25 +2,26 @@
 This is a scheduler microservice API that deals with dynamic interactions between Tasks and Task Consumers and the generation of a scheduling policy at a given point in time. It is comprised of a Spring Boot application (backed by MongoDB) and a Spring Cloud Config Server.
 
 ## Config Server
-You must launch the config server before running the Application.
+1. You must launch the config server before running the Application.
 To run:
-- ``` cd scheduler-microservice-cloud-config ```
-- ``` mvn spring-boot:run ```
+    - ``` cd scheduler-microservice-cloud-config ```
+    - ``` mvn spring-boot:run ```
 
 The config server is now launched on ```http://localhost:8090``` and pulling `.properties` files from my Github at https://github.com/louis-leung/scheduler-microservice
 
 ## Application
-Start up a MongoDB instance on localhost listening on default port 27017.
+1. Start up a MongoDB instance on localhost listening on default port 27017.
 
-Now we can run the application.
+2. Now we can run the application.
 To run:
-- ``` cd scheduler-microservice```
-- ``` mvn spring-boot:run ```
+    - ``` cd scheduler-microservice```
+    - ``` mvn spring-boot:run ```
 
-Navigate to ```http://localhost:8080/swagger-ui.html``` for Swagger API documentation and usage.
+3. Navigate to ```http://localhost:8080/swagger-ui.html``` for Swagger API documentation and usage.
+
 To refresh configuration, make a POST request to ```http://localhost:8090/actuator/refresh```
 
-## Testing
+### Testing
 - ``` cd scheduler-microservice```
 - ``` mvn test```
 
@@ -38,3 +39,4 @@ To refresh configuration, make a POST request to ```http://localhost:8090/actuat
 #### Improvements Needed:
 - The integration tests currently only test for correct JSON payload of the object created as opposed to the entire Resource wrapper (with links). This is due to some object mapper conflicts that I haven't resolved yet. 
 - Not complete code coverage on tests.
+- Some form of authentication. (e.g. access token)
